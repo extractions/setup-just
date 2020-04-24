@@ -1,0 +1,33 @@
+{
+  "name": "setup-just",
+  "version": "0.1.0",
+  "description": "Install the just command runner",
+  "main": "dist/index.js",
+  "scripts": {
+    "lint": "node node_modules/.bin/eslint **/*.ts",
+    "build": "rm -rf dist/ && ncc build src/index.ts --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/extractions/setup-just.git"
+  },
+  "author": "Ross MacArthur <ross@macarthur.io>",
+  "license": "MIT OR Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/extractions/setup-just/issues"
+  },
+  "homepage": "https://github.com/extractions/setup-just#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.2",
+    "@types/semver": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "typescript": "^3.8.3"
+  }
+}
