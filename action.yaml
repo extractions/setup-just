@@ -1,0 +1,12 @@
+name: 'Setup just'
+author: 'Ross MacArthur'
+description: 'Install the just command runner'
+branding:
+  icon: 'play'
+  color: 'blue'
+inputs:
+  version:
+    description: 'A valid semver specifier of the just version to install'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
