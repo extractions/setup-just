@@ -3,6 +3,21 @@ import * as tc from "@actions/tool-cache";
 import * as semver from "semver";
 import { Octokit } from "@octokit/rest";
 
+function getTarget(): string {
+  if (process.arch == "x64") {
+    if (process.platform == "linux") {
+      return "x86_64-unknown-linux-musl";
+    } else if (process.platform == "darwin") {
+      return "x86_64-apple-darwin";
+    } else if (process.platform == "win32") {
+      return "x86_64-pc-windows-msvc";
+    }
+  }
+  throw new Error(
+    `failed to determine current target; arch = ${process.arch}, platform = ${process.platform}`
+  );
+}
+
 class Release {
   version: string;
   downloadUrl: string;
@@ -13,7 +28,10 @@ class Release {
   }
 }
 
-async function getRelease(versionSpec?: string): Promise<Release | undefined> {
+async function getRelease(
+  versionSpec: string | null,
+  target: string
+): Promise<Release | undefined> {
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
   return octokit
     .paginate(
@@ -22,9 +40,7 @@ async function getRelease(versionSpec?: string): Promise<Release | undefined> {
       (response, done) => {
         const releases = response.data
           .map((rel) => {
-            const asset = rel.assets.find((ass) =>
-              ass.name.includes(process.platform)
-            );
+            const asset = rel.assets.find((ass) => ass.name.includes(target));
             if (asset) {
               return new Release(
                 rel.tag_name.replace(/^v/, ""),
@@ -48,17 +64,20 @@ async function getRelease(versionSpec?: string): Promise<Release | undefined> {
 
 async function checkOrInstallTool(
   toolName: string,
-  versionSpec?: string
+  versionSpec: string | null,
+  target: string
 ): Promise<string> {
   // first check if we have previously donwloaded the tool
   const cache = tc.find(toolName, versionSpec || "*");
   if (cache) {
-    core.info(`${toolName} matching version spec ${versionSpec} found in cache`);
+    core.info(
+      `${toolName} matching version spec ${versionSpec} found in cache`
+    );
     return cache;
   }
 
   // find the latest release by querying GitHub API
-  const release = await getRelease(versionSpec);
+  const release = await getRelease(versionSpec, target);
   if (release === undefined) {
     throw new Error(
       `no release for ${toolName} matching version spec ${versionSpec}`
@@ -85,7 +104,8 @@ async function checkOrInstallTool(
 async function main() {
   try {
     const version = core.getInput("version");
-    const cacheDir = await checkOrInstallTool("just", version);
+    const target = getTarget();
+    const cacheDir = await checkOrInstallTool("just", version, target);
     core.addPath(cacheDir);
   } catch (err) {
     core.setFailed(err.message);
