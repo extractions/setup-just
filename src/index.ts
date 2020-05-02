@@ -14,7 +14,7 @@ class Release {
 }
 
 async function getRelease(versionSpec?: string): Promise<Release | undefined> {
-  const octokit = new Octokit();
+  const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
   return octokit
     .paginate(
       octokit.repos.listReleases,
@@ -53,6 +53,7 @@ async function checkOrInstallTool(
   // first check if we have previously donwloaded the tool
   const cache = tc.find(toolName, versionSpec || "*");
   if (cache) {
+    core.info(`${toolName} matching version spec ${versionSpec} found in cache`);
     return cache;
   }
 
