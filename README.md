@@ -9,8 +9,8 @@ This GitHub Action will install the latest release of the
 
 ### Inputs
 
-| Name      | Required | Description                                             | Type   | Default |
-| --------- | -------- | ------------------------------------------------------- | ------ | ------- |
+| Name      | Required | Description                                              | Type   | Default |
+| --------- | -------- | -------------------------------------------------------- | ------ | ------- |
 | `version` | no       | A valid semver specification for the version to install. | string | *       |
 
 
