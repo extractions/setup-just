@@ -1,0 +1,35 @@
+name: build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm install --global @zeit/ncc
+    - run: npm ci
+    - run: npm run lint
+    - run: npm run build
+
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run self
+      uses: ./
+      with:
+        version: 0.5.10
+
+    - name: Check just version
+      run: just --version | grep "^just v0.5.10$"
+      shell: bash
