@@ -4,8 +4,10 @@
   "description": "Install the just command runner",
   "main": "dist/index.js",
   "scripts": {
+    "fmt": "node node_modules/.bin/prettier --write **/*.ts",
     "lint": "node node_modules/.bin/eslint **/*.ts",
-    "build": "rm -rf dist/ && ncc build src/index.ts --minify"
+    "build": "rm -rf dist/ && ncc build src/index.ts --minify",
+    "run": "npm run build && node dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -18,16 +20,18 @@
   },
   "homepage": "https://github.com/extractions/setup-just#readme",
   "dependencies": {
-    "@actions/core": "^1.2.3"
+    "@actions/core": "^1.2.3",
+    "@actions/tool-cache": "^1.3.4",
+    "@octokit/rest": "^17.6.0",
+    "semver": "^7.3.2"
   },
   "devDependencies": {
     "@types/node": "^13.13.2",
     "@types/semver": "^7.1.0",
-    "@typescript-eslint/eslint-plugin": "^2.29.0",
-    "@typescript-eslint/parser": "^2.29.0",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
     "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.2",
+    "prettier": "^2.0.5",
     "typescript": "^3.8.3"
   }
 }
