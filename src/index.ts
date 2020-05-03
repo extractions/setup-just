@@ -103,7 +103,7 @@ async function checkOrInstallTool(
 
 async function main() {
   try {
-    const version = core.getInput("version");
+    const version = core.getInput("just-version");
     const target = getTarget();
     const cacheDir = await checkOrInstallTool("just", version, target);
     core.addPath(cacheDir);

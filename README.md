@@ -9,9 +9,9 @@ This GitHub Action will install the latest release of the
 
 ### Inputs
 
-| Name      | Required | Description                                              | Type   | Default |
-| --------- | -------- | -------------------------------------------------------- | ------ | ------- |
-| `version` | no       | A valid semver specification for the version to install. | string | *       |
+| Name           | Required | Description                                              | Type   | Default |
+| -------------- | -------- | -------------------------------------------------------- | ------ | ------- |
+| `just-version` | no       | A valid semver specification for the version to install. | string | *       |
 
 
 ### Basic example
@@ -21,9 +21,9 @@ Add the following to your workflow.
 ```yaml
 - uses: extractions/setup-just@v1
   with:
-    version: 0.5
+    just-version: 0.5
   env:
-    # this is not required but will be prevent any rate limiting issues
+    # this is not required but add it if you get any rate limiting issues
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 

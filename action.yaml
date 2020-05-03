@@ -5,7 +5,7 @@ branding:
   icon: 'play'
   color: 'blue'
 inputs:
-  version:
+  just-version:
     description: 'A valid semver specifier of the just version to install'
 runs:
   using: 'node12'
