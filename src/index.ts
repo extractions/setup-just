@@ -3,49 +3,72 @@ import * as tc from "@actions/tool-cache";
 import * as semver from "semver";
 import { Octokit } from "@octokit/rest";
 
+/**
+ * @returns {string} the Rust target specifier for the current platform.
+ */
 function getTarget(): string {
-  if (process.arch == "x64") {
-    if (process.platform == "linux") {
+  const { arch, platform } = process;
+  if (arch == "x64") {
+    if (platform == "linux") {
       return "x86_64-unknown-linux-musl";
-    } else if (process.platform == "darwin") {
+    } else if (platform == "darwin") {
       return "x86_64-apple-darwin";
-    } else if (process.platform == "win32") {
+    } else if (platform == "win32") {
       return "x86_64-pc-windows-msvc";
     }
   }
   throw new Error(
-    `failed to determine current target; arch = ${process.arch}, platform = ${process.platform}`
+    `failed to determine current target; arch = ${arch}, platform = ${platform}`
   );
 }
 
-class Release {
-  version: string;
-  downloadUrl: string;
-
-  constructor(version: string, downloadUrl: string) {
-    this.version = version;
-    this.downloadUrl = downloadUrl;
-  }
+/**
+ * Represents a tool to install from GitHub.
+ */
+interface Tool {
+  /** The GitHub owner (username or organization). */
+  owner: string;
+  /** The name of the tool and the GitHub repo name. */
+  name: string;
+  /** A valid semantic version specifier for the tool. */
+  versionSpec?: string;
 }
 
-async function getRelease(
-  versionSpec: string | null,
-  target: string
-): Promise<Release | undefined> {
+/**
+ * Represents a single release for a {@link Tool}.
+ */
+interface Release {
+  /** The exact release tag. */
+  version: string;
+  /** The asset download URL. */
+  downloadUrl: string;
+}
+
+/**
+ * Fetch the latest matching release for the given tool.
+ *
+ * @param tool the tool to fetch a release for.
+ * @param target the Rust target specifier that should be included in the GitHub
+ * release asset.
+ *
+ * @returns {Promise<Release>} a single GitHub release.
+ */
+async function getRelease(tool: Tool, target: string): Promise<Release> {
+  const { owner, name, versionSpec } = tool;
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
   return octokit
     .paginate(
       octokit.repos.listReleases,
-      { owner: "casey", repo: "just" },
+      { owner, repo: name },
       (response, done) => {
         const releases = response.data
           .map((rel) => {
             const asset = rel.assets.find((ass) => ass.name.includes(target));
             if (asset) {
-              return new Release(
-                rel.tag_name.replace(/^v/, ""),
-                asset.browser_download_url
-              );
+              return {
+                version: rel.tag_name.replace(/^v/, ""),
+                downloadUrl: asset.browser_download_url,
+              };
             }
           })
           .filter((rel) =>
@@ -59,53 +82,71 @@ async function getRelease(
         return releases;
       }
     )
-    .then((releases) => releases.find(Boolean));
+    .then((releases) => {
+      const release = releases.find((release) => release != null);
+      if (release === undefined) {
+        throw new Error(
+          `no release for ${name} matching version specifier ${versionSpec}`
+        );
+      }
+      return release;
+    });
 }
 
-async function checkOrInstallTool(
-  toolName: string,
-  versionSpec: string | null,
-  target: string
-): Promise<string> {
+/**
+ * Checks the tool cache for the tool, and if it is missing fetches it from
+ * GitHub releases.
+ *
+ * @param tool the tool to check or install.
+ * @param target the Rust target specifier that should be included in the GitHub
+ * release asset.
+ *
+ * @returns the directory containing the tool binary.
+ */
+async function checkOrInstallTool(tool: Tool, target: string): Promise<string> {
+  const { name, versionSpec } = tool;
+
   // first check if we have previously donwloaded the tool
-  const cache = tc.find(toolName, versionSpec || "*");
+  const cache = tc.find(name, versionSpec || "*");
   if (cache) {
     core.info(
-      `${toolName} matching version spec ${versionSpec} found in cache`
+      `${name} matching version specifier ${versionSpec} found in cache`
     );
     return cache;
   }
 
   // find the latest release by querying GitHub API
-  const release = await getRelease(versionSpec, target);
-  if (release === undefined) {
-    throw new Error(
-      `no release for ${toolName} matching version spec ${versionSpec}`
-    );
-  }
+  const { version, downloadUrl } = await getRelease(tool, target);
 
-  // download, extract and cache the tool
-  core.info(`Download from "${release.downloadUrl}"`);
-  const artifact = await tc.downloadTool(release.downloadUrl);
+  // download, extract, and cache the tool
+  core.info(`Download from "${downloadUrl}"`);
+  const artifact = await tc.downloadTool(downloadUrl);
 
   core.info("Extract downloaded archive");
-  const dir = `./just-${release.version}`;
+  const dir = `./${name}-${version}`;
 
   let extractDir;
-  if (release.downloadUrl.endsWith(".zip")) {
+  if (downloadUrl.endsWith(".zip")) {
     extractDir = await tc.extractZip(artifact, dir);
   } else {
     extractDir = await tc.extractTar(artifact, dir);
   }
 
-  return tc.cacheDir(extractDir, "just", release.version);
+  return tc.cacheDir(extractDir, name, version);
 }
 
 async function main() {
   try {
-    const version = core.getInput("just-version");
+    const versionSpec = core.getInput("just-version");
     const target = getTarget();
-    const cacheDir = await checkOrInstallTool("just", version, target);
+    const cacheDir = await checkOrInstallTool(
+      {
+        owner: "casey",
+        name: "just",
+        versionSpec,
+      },
+      target
+    );
     core.addPath(cacheDir);
   } catch (err) {
     core.setFailed(err.message);
