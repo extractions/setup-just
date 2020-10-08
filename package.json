@@ -7,7 +7,7 @@
     "fmt": "node node_modules/.bin/prettier --write **/*.ts",
     "lint": "node node_modules/.bin/eslint **/*.ts",
     "build": "rm -rf dist/ && ncc build src/index.ts --minify",
-    "run": "npm run build && node dist/index.js"
+    "run": "npm run build && RUNNER_TOOL_CACHE=./runner/cache RUNNER_TEMP=./runner/temp node dist/index.js"
   },
   "repository": {
     "type": "git",

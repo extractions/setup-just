@@ -1,3 +1,4 @@
+import * as path from "path";
 import * as core from "@actions/core";
 import * as tc from "@actions/tool-cache";
 import * as semver from "semver";
@@ -32,6 +33,20 @@ interface Tool {
   name: string;
   /** A valid semantic version specifier for the tool. */
   versionSpec?: string;
+}
+
+/**
+ * Represents an installed tool.
+ */
+interface InstalledTool {
+  /** The GitHub owner (username or organization). */
+  owner: string;
+  /** The name of the tool and the GitHub repo name. */
+  name: string;
+  /** The version of the tool. */
+  version: string;
+  /** The directory containing the tool binary. */
+  dir: string;
 }
 
 /**
@@ -103,43 +118,45 @@ async function getRelease(tool: Tool, target: string): Promise<Release> {
  *
  * @returns the directory containing the tool binary.
  */
-async function checkOrInstallTool(tool: Tool, target: string): Promise<string> {
+async function checkOrInstallTool(
+  tool: Tool,
+  target: string
+): Promise<InstalledTool> {
   const { name, versionSpec } = tool;
 
-  // first check if we have previously donwloaded the tool
-  const cache = tc.find(name, versionSpec || "*");
-  if (cache) {
-    core.info(
-      `${name} matching version specifier ${versionSpec} found in cache`
-    );
-    return cache;
+  // first check if we have previously downloaded the tool
+  let dir = tc.find(name, versionSpec || "*");
+
+  if (!dir) {
+    // find the latest release by querying GitHub API
+    const { version, downloadUrl } = await getRelease(tool, target);
+
+    // download, extract, and cache the tool
+    const artifact = await tc.downloadTool(downloadUrl);
+    core.debug(`Successfully downloaded ${name} v${version}`);
+
+    let extractDir;
+    if (downloadUrl.endsWith(".zip")) {
+      extractDir = await tc.extractZip(artifact);
+    } else {
+      extractDir = await tc.extractTar(artifact);
+    }
+    core.debug(`Successfully extracted archive for ${name} v${version}`);
+
+    dir = await tc.cacheDir(extractDir, name, version);
   }
 
-  // find the latest release by querying GitHub API
-  const { version, downloadUrl } = await getRelease(tool, target);
+  // FIXME: is there a better way to get the version?
+  const version = path.basename(path.dirname(dir));
 
-  // download, extract, and cache the tool
-  core.info(`Download from "${downloadUrl}"`);
-  const artifact = await tc.downloadTool(downloadUrl);
-
-  core.info("Extract downloaded archive");
-  const dir = `./${name}-${version}`;
-
-  let extractDir;
-  if (downloadUrl.endsWith(".zip")) {
-    extractDir = await tc.extractZip(artifact, dir);
-  } else {
-    extractDir = await tc.extractTar(artifact, dir);
-  }
-
-  return tc.cacheDir(extractDir, name, version);
+  return { version, dir, ...tool };
 }
 
 async function main() {
   try {
     const versionSpec = core.getInput("just-version");
     const target = getTarget();
-    const cacheDir = await checkOrInstallTool(
+    const tool = await checkOrInstallTool(
       {
         owner: "casey",
         name: "just",
@@ -147,7 +164,8 @@ async function main() {
       },
       target
     );
-    core.addPath(cacheDir);
+    core.addPath(tool.dir);
+    core.info(`Successfully setup ${tool.name} v${tool.version}`);
   } catch (err) {
     core.setFailed(err.message);
   }
