@@ -1,0 +1,52 @@
+name: build
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm install --global @zeit/ncc
+    - run: npm ci
+    - run: npm run lint
+    - run: npm run build
+
+  test-latest:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup just
+      uses: ./
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Test
+      run: |
+        [ "$(just --justfile tests/Justfile)" = "Test..." ]
+      shell: bash
+
+  test-version:
+    needs: test-latest
+    strategy:
+      matrix:
+        just-version: [0.4.5, 0.5.11, 0.6.1, 0.7.3, 0.8.0]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run self
+      uses: ./
+      with:
+        just-version: ${{ matrix.just-version }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Check version
+      run: just --version | grep "^just v${{ matrix.just-version }}$"
+    - name: Test
+      run: |
+        [ "$(just --justfile tests/Justfile)" = "Test..." ]
