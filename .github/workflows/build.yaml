@@ -35,7 +35,7 @@ jobs:
     needs: test-latest
     strategy:
       matrix:
-        just-version: [0.4.5, 0.5.11, 0.6.1, 0.7.3, 0.8.0]
+        just-version: [0.4.5, 0.5.11, 0.6.1, 0.7.3, 0.8.3]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

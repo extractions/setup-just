@@ -21,7 +21,7 @@ Add the following to your workflow.
 ```yaml
 - uses: extractions/setup-just@v1
   with:
-    just-version: 0.5
+    just-version: 0.8
   env:
     # this is not required but add it if you get any rate limiting issues
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
