@@ -9,10 +9,19 @@ This GitHub Action will install the latest release of the
 
 ### Inputs
 
-| Name           | Required | Description                                              | Type   | Default |
-| -------------- | -------- | -------------------------------------------------------- | ------ | ------- |
-| `just-version` | no       | A valid semver specification for the version to install. | string | *       |
+| Name           | Required | Description                             | Type   | Default |
+| -------------- | -------- | --------------------------------------- | ------ | ------- |
+| `just-version` | no       | A valid NPM-style semver specification. | string | *       |
 
+The semver specification is passed directly to NPM's [semver
+package](https://www.npmjs.com/package/semver). This GitHub Action will install
+the latest matching release. Examples include
+
+- `just-version: '*'` latest version (default).
+- `just-version: '0.8'` equivalent to `>=0.8.0 <0.9.0`.
+- `just-version: '0.8.x'` equivalent to `>=0.8.0 <0.9.0`.
+- `just-version: '0.8.3'` equivalent to `=0.8.3`.
+- `just-version: '^0.8.3'` equivalent to `>=0.8.3 <0.9.0`.
 
 ### Basic example
 
