@@ -21,7 +21,7 @@
   "homepage": "https://github.com/extractions/setup-just#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@extractions/setup-crate": "^0.1.0"
+    "@extractions/setup-crate": "^0.2.1"
   },
   "devDependencies": {
     "@types/node": "^14.11.6",
