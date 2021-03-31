@@ -1,11 +1,38 @@
-# `setup-just` action
+# 🤖 `setup-just` action
 
 ![build](https://img.shields.io/github/workflow/status/extractions/setup-just/build)
 
-This GitHub Action will install the latest release of the
+This GitHub Action will install a release of the
 [just](https://github.com/casey/just) command runner for you.
 
 ## Usage
+
+### Examples
+
+In most cases all you will need is the following in your workflow.
+
+```yaml
+- uses: extractions/setup-just@v1
+```
+
+If you want a specific version of `just` you can specify this by passing the
+`just-version` input.
+
+```yaml
+- uses: extractions/setup-just@v1
+  with:
+    just-version: 0.9
+```
+
+In rare circumstances you might get rate limiting errors, this is because this
+workflow has to make requests to GitHub API in order to list available releases.
+If this happens you can set the `GITHUB_TOKEN` environment variable.
+
+```yaml
+- uses: extractions/setup-just@v1
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
 
 ### Inputs
 
@@ -18,23 +45,10 @@ package](https://www.npmjs.com/package/semver). This GitHub Action will install
 the latest matching release. Examples include
 
 - `just-version: '*'` latest version (default).
-- `just-version: '0.8'` equivalent to `>=0.8.0 <0.9.0`.
-- `just-version: '0.8.x'` equivalent to `>=0.8.0 <0.9.0`.
-- `just-version: '0.8.3'` equivalent to `=0.8.3`.
-- `just-version: '^0.8.3'` equivalent to `>=0.8.3 <0.9.0`.
-
-### Basic example
-
-Add the following to your workflow.
-
-```yaml
-- uses: extractions/setup-just@v1
-  with:
-    just-version: 0.8
-  env:
-    # this is not required but add it if you get any rate limiting issues
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
+- `just-version: '0.9'` equivalent to `>=0.9.0 <0.10.0`.
+- `just-version: '0.9.x'` equivalent to `>=0.9.0 <0.10.0`.
+- `just-version: '0.9.0'` equivalent to `=0.9.0`.
+- `just-version: '^0.9.0'` equivalent to `>=0.9.0 <0.10.0`.
 
 ## License
 
