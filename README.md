@@ -21,7 +21,7 @@ If you want a specific version of `just` you can specify this by passing the
 ```yaml
 - uses: extractions/setup-just@v1
   with:
-    just-version: 0.9
+    just-version: 0.10
 ```
 
 In rare circumstances you might get rate limiting errors, this is because this
@@ -45,10 +45,37 @@ package](https://www.npmjs.com/package/semver). This GitHub Action will install
 the latest matching release. Examples include
 
 - `just-version: '*'` latest version (default).
-- `just-version: '0.9'` equivalent to `>=0.9.0 <0.10.0`.
-- `just-version: '0.9.x'` equivalent to `>=0.9.0 <0.10.0`.
-- `just-version: '0.9.0'` equivalent to `=0.9.0`.
-- `just-version: '^0.9.0'` equivalent to `>=0.9.0 <0.10.0`.
+- `just-version: '0.10'` equivalent to `>=0.10.0 <0.11.0`.
+- `just-version: '0.10.x'` equivalent to `>=0.10.0 <0.11.0`.
+- `just-version: '0.10.0'` equivalent to `=0.10.0`.
+- `just-version: '^0.10.0'` equivalent to `>=0.10.0 <0.11.0`.
+
+## Development
+
+Most of the installation logic is done in a shared library located at
+[@extractions/setup-crate](https://github.com/extractions/setup-crate).
+
+The following commands are useful for development.
+
+- `npm i`
+
+  Install all dependencies.
+
+- `npm run fmt`
+
+  Format the source code.
+
+- `npm run lint`
+
+  Run all lints.
+
+- `npm run run`
+
+  Test the action by running it.
+
+- `npm run build`
+
+  Build the action and update `dist/`.
 
 ## License
 
