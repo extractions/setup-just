@@ -21,7 +21,7 @@ If you want a specific version of `just` you can specify this by passing the
 ```yaml
 - uses: extractions/setup-just@v1
   with:
-    just-version: '0.10'
+    just-version: '1.4.0'
 ```
 
 In rare circumstances you might get rate limiting errors, this is because this
