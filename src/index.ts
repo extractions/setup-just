@@ -12,7 +12,9 @@ async function main() {
     core.addPath(tool.dir);
     core.info(`Successfully setup ${tool.name} v${tool.version}`);
   } catch (err) {
-    core.setFailed(err.message);
+    if (err instanceof Error) {
+      core.setFailed(err.message);
+    }
   }
 }
 

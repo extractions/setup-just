@@ -4,8 +4,8 @@
   "description": "Install the just command runner",
   "main": "dist/index.js",
   "scripts": {
-    "fmt": "node node_modules/.bin/prettier --write **/*.ts",
-    "lint": "node node_modules/.bin/eslint **/*.ts",
+    "fmt": "prettier --write **/*.ts",
+    "lint": "eslint **/*.ts",
     "build": "rm -rf dist/ && ncc build src/index.ts --minify",
     "run": "npm run build && RUNNER_TOOL_CACHE=./runner/cache RUNNER_TEMP=./runner/temp node dist/index.js"
   },
@@ -20,17 +20,17 @@
   },
   "homepage": "https://github.com/extractions/setup-just#readme",
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@extractions/setup-crate": "^0.2.1"
+    "@actions/core": "^1.9.1",
+    "@extractions/setup-crate": "^0.3.1"
   },
   "devDependencies": {
-    "@types/node": "^14.11.6",
-    "@types/semver": "^7.3.4",
-    "@typescript-eslint/eslint-plugin": "^4.4.0",
-    "@typescript-eslint/parser": "^4.4.0",
-    "@vercel/ncc": "^0.29.2",
-    "eslint": "^7.10.0",
-    "prettier": "^2.1.2",
-    "typescript": "^4.0.3"
+    "@types/node": "^18.7.21",
+    "@types/semver": "^7.3.12",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
+    "@vercel/ncc": "^0.34.0",
+    "eslint": "^8.24.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.3"
   }
 }

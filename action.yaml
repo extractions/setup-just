@@ -8,5 +8,5 @@ inputs:
   just-version:
     description: 'A valid semver specifier of the just version to install'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
