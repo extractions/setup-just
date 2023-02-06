@@ -6,8 +6,6 @@ async function main() {
     process.env.GITHUB_TOKEN =
       process.env.GITHUB_TOKEN || core.getInput("token");
 
-    console.log(process.env.GITHUB_TOKEN);
-
     const versionSpec = core.getInput("just-version");
     const tool = await setup.checkOrInstallTool({
       owner: "casey",
