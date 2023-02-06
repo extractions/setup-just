@@ -44,10 +44,10 @@ Alternatively, you may set the input `token`.
 
 ### Inputs
 
-| Name           | Required | Description                             | Type   | Default                     |
-| -------------- | -------- | --------------------------------------- | ------ | --------------------------- |
-| `just-version` | no       | A valid NPM-style semver specification. | string | *                           |
-| `token`        | no       | A Github token.                         | string | ${{ secrets.GITHUB_TOKEN }} |
+| Name           | Required | Description                             | Type   | Default               |
+| -------------- | -------- | --------------------------------------- | ------ | --------------------- |
+| `just-version` | no       | A valid NPM-style semver specification. | string | *                     |
+| `token`        | no       | A Github token.                         | string | `${{ github.token }}` |
 
 The semver specification is passed directly to NPM's [semver
 package](https://www.npmjs.com/package/semver). This GitHub Action will install
