@@ -7,7 +7,7 @@ branding:
 inputs:
   just-version:
     description: 'A valid semver specifier of the just version to install'
-  token:
+  github-token:
     description: 'Github token to use to authenticate downloads'
     required: false
     default: ${{ github.token }}

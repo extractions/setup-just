@@ -4,7 +4,7 @@ import * as setup from "@extractions/setup-crate";
 async function main() {
   try {
     process.env.GITHUB_TOKEN =
-      process.env.GITHUB_TOKEN || core.getInput("token");
+      process.env.GITHUB_TOKEN || core.getInput("github-token");
 
     const versionSpec = core.getInput("just-version");
     const tool = await setup.checkOrInstallTool({

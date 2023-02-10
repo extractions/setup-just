@@ -39,7 +39,7 @@ Alternatively, you may set the input `token`.
 ```yaml
 - uses: extractions/setup-just@v1
   input:
-    token: ${{ secrets.MY_GITHUB_TOKEN }}
+    github-token: ${{ secrets.MY_GITHUB_TOKEN }}
 ```
 
 ### Inputs
@@ -47,7 +47,7 @@ Alternatively, you may set the input `token`.
 | Name           | Required | Description                             | Type   | Default               |
 | -------------- | -------- | --------------------------------------- | ------ | --------------------- |
 | `just-version` | no       | A valid NPM-style semver specification. | string | *                     |
-| `token`        | no       | A Github token.                         | string | `${{ github.token }}` |
+| `github-token` | no       | A Github token.                         | string | `${{ github.token }}` |
 
 The semver specification is passed directly to NPM's [semver
 package](https://www.npmjs.com/package/semver). This GitHub Action will install
