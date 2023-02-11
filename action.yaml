@@ -7,6 +7,10 @@ branding:
 inputs:
   just-version:
     description: 'A valid semver specifier of the just version to install'
+  github-token:
+    description: 'Github token to use to authenticate downloads'
+    required: false
+    default: ${{ github.token }}
 runs:
   using: 'node16'
   main: 'dist/index.js'

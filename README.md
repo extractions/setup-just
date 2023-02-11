@@ -24,9 +24,9 @@ If you want a specific version of `just` you can specify this by passing the
     just-version: '1.4.0'
 ```
 
-In rare circumstances you might get rate limiting errors, this is because this
-workflow has to make requests to GitHub API in order to list available releases.
-If this happens you can set the `GITHUB_TOKEN` environment variable.
+To avoid rate-limitting, the default Github token available to all actions, is 
+automatically used to authenticate calls to Github. To override it, set the environment
+variable `GITHUB_TOKEN`.
 
 ```yaml
 - uses: extractions/setup-just@v1
@@ -34,11 +34,20 @@ If this happens you can set the `GITHUB_TOKEN` environment variable.
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+Alternatively, you may set the input `token`.
+
+```yaml
+- uses: extractions/setup-just@v1
+  input:
+    github-token: ${{ secrets.MY_GITHUB_TOKEN }}
+```
+
 ### Inputs
 
-| Name           | Required | Description                             | Type   | Default |
-| -------------- | -------- | --------------------------------------- | ------ | ------- |
-| `just-version` | no       | A valid NPM-style semver specification. | string | *       |
+| Name           | Required | Description                             | Type   | Default               |
+| -------------- | -------- | --------------------------------------- | ------ | --------------------- |
+| `just-version` | no       | A valid NPM-style semver specification. | string | *                     |
+| `github-token` | no       | A Github token.                         | string | `${{ github.token }}` |
 
 The semver specification is passed directly to NPM's [semver
 package](https://www.npmjs.com/package/semver). This GitHub Action will install
