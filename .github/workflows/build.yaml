@@ -9,8 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
         node-version: '18'
     - run: npm ci
@@ -23,7 +23,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup just
       uses: ./
       env:
@@ -40,13 +40,11 @@ jobs:
         just-version: [0.5.11, 0.6.1, 0.7.3, 0.8.7, 0.9.9, 0.10.7, 0.11.2, 1.5.0]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Run self
       uses: ./
       with:
         just-version: ${{ matrix.just-version }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Check version
       run: just --version | grep -E "^just v?${{ matrix.just-version }}$"
     - name: Test
