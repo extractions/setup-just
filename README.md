@@ -1,6 +1,6 @@
 # 🤖 `setup-just` action
 
-![build](https://img.shields.io/github/workflow/status/extractions/setup-just/build)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/extractions/setup-just/build.yaml?branch=trunk)](https://github.com/extractions/setup-just/actions/workflows/build.yaml)
 
 This GitHub Action will install a release of the
 [just](https://github.com/casey/just) command runner for you.
@@ -24,9 +24,9 @@ If you want a specific version of `just` you can specify this by passing the
     just-version: '1.4.0'
 ```
 
-To avoid rate-limitting, the default Github token available to all actions, is 
-automatically used to authenticate calls to Github. To override it, set the environment
-variable `GITHUB_TOKEN`.
+To avoid rate-limiting, the default Github token available to all actions, is
+automatically used to authenticate calls to Github. To override it, set the
+environment variable `GITHUB_TOKEN` or pass the input `github-token`.
 
 ```yaml
 - uses: extractions/setup-just@v1
@@ -34,7 +34,7 @@ variable `GITHUB_TOKEN`.
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Alternatively, you may set the input `token`.
+or
 
 ```yaml
 - uses: extractions/setup-just@v1
@@ -44,10 +44,10 @@ Alternatively, you may set the input `token`.
 
 ### Inputs
 
-| Name           | Required | Description                             | Type   | Default               |
-| -------------- | -------- | --------------------------------------- | ------ | --------------------- |
-| `just-version` | no       | A valid NPM-style semver specification. | string | *                     |
-| `github-token` | no       | A Github token.                         | string | `${{ github.token }}` |
+| Name           | Required | Description                                  | Type   | Default               |
+| -------------- | -------- | -------------------------------------------- | ------ | --------------------- |
+| `just-version` | no       | A valid NPM-style semver specification.      | string | *                     |
+| `github-token` | no       | A Github token to authenticate API requests. | string | `${{ github.token }}` |
 
 The semver specification is passed directly to NPM's [semver
 package](https://www.npmjs.com/package/semver). This GitHub Action will install
