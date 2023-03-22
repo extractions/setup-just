@@ -38,7 +38,7 @@ or
 
 ```yaml
 - uses: extractions/setup-just@v1
-  input:
+  with:
     github-token: ${{ secrets.MY_GITHUB_TOKEN }}
 ```
 
