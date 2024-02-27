@@ -36,8 +36,8 @@ jobs:
   test-version:
     needs: test-latest
     strategy:
-      matrix:
-        just-version: [0.5.11, 0.6.1, 0.7.3, 0.8.7, 0.9.9, 0.10.7, 0.11.2, 1.5.0]
+      matrix:  # https://github.com/casey/just/releases
+        just-version: [0.5.11, 0.6.1, 0.7.3, 0.8.7, 0.9.9, 0.10.7, 0.11.2, 1.5.0, 1.23.0]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
