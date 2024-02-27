@@ -20,17 +20,17 @@
   },
   "homepage": "https://github.com/extractions/setup-just#readme",
   "dependencies": {
-    "@actions/core": "^1.9.1",
+    "@actions/core": "^1.10.1",
     "@extractions/setup-crate": "^0.4.0"
   },
   "devDependencies": {
-    "@types/node": "^18.7.21",
-    "@types/semver": "^7.3.12",
-    "@typescript-eslint/eslint-plugin": "^5.38.0",
-    "@typescript-eslint/parser": "^5.38.0",
-    "@vercel/ncc": "^0.34.0",
-    "eslint": "^8.24.0",
-    "prettier": "^2.7.1",
-    "typescript": "^4.8.3"
+    "@types/node": "^20.11.20",
+    "@types/semver": "^7.5.8",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
+    "@vercel/ncc": "^0.38.1",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
   }
 }
