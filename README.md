@@ -12,14 +12,14 @@ This GitHub Action will install a release of the
 In most cases all you will need is the following in your workflow.
 
 ```yaml
-- uses: extractions/setup-just@v1
+- uses: extractions/setup-just@v2
 ```
 
 If you want a specific version of `just` you can specify this by passing the
 `just-version` input.
 
 ```yaml
-- uses: extractions/setup-just@v1
+- uses: extractions/setup-just@v2
   with:
     just-version: '1.4.0'
 ```
@@ -29,7 +29,7 @@ automatically used to authenticate calls to Github. To override it, set the
 environment variable `GITHUB_TOKEN` or pass the input `github-token`.
 
 ```yaml
-- uses: extractions/setup-just@v1
+- uses: extractions/setup-just@v2
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -37,7 +37,7 @@ environment variable `GITHUB_TOKEN` or pass the input `github-token`.
 or
 
 ```yaml
-- uses: extractions/setup-just@v1
+- uses: extractions/setup-just@v2
   with:
     github-token: ${{ secrets.MY_GITHUB_TOKEN }}
 ```
