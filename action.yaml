@@ -12,5 +12,10 @@ inputs:
     required: false
     default: ${{ github.token }}
 runs:
-  using: 'node20'
-  main: 'dist/index.js'
+  using: composite
+  steps:
+    - uses: extractions/setup-crate@v1
+      with:
+        repo: casey/just
+        version: ${{ inputs.just-version }}
+        github-token: ${{ inputs.github-token }}

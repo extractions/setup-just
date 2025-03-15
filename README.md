@@ -21,20 +21,12 @@ If you want a specific version of `just` you can specify this by passing the
 ```yaml
 - uses: extractions/setup-just@v2
   with:
-    just-version: '1.4.0'
+    just-version: '1.40.0'
 ```
 
 To avoid rate-limiting, the default Github token available to all actions, is
-automatically used to authenticate calls to Github. To override it, set the
-environment variable `GITHUB_TOKEN` or pass the input `github-token`.
-
-```yaml
-- uses: extractions/setup-just@v2
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
-
-or
+automatically used to authenticate calls to Github. To override it, pass the
+input `github-token`.
 
 ```yaml
 - uses: extractions/setup-just@v2
@@ -54,37 +46,16 @@ package](https://www.npmjs.com/package/semver). This GitHub Action will install
 the latest matching release. Examples include
 
 - `just-version: '*'` latest version (default).
-- `just-version: '0.10'` equivalent to `>=0.10.0 <0.11.0`.
-- `just-version: '0.10.x'` equivalent to `>=0.10.0 <0.11.0`.
-- `just-version: '0.10.0'` equivalent to `=0.10.0`.
-- `just-version: '^0.10.0'` equivalent to `>=0.10.0 <0.11.0`.
+- `just-version: '1'` equivalent to `>=1.0.0 <2.0.0`.
+- `just-version: '1.2'` equivalent to `>=1.2.0 <2.0.0`.
+- `just-version: '1.2.3'` equivalent to `=1.2.3`.
+- `just-version: '^1.2.3'` equivalent to `>=1.2.3 <2.0.0`.
 
 ## Development
 
-Most of the installation logic is done in a shared library located at
+This action is a composite action and the installation logic is done in a shared
+library located at
 [@extractions/setup-crate](https://github.com/extractions/setup-crate).
-
-The following commands are useful for development.
-
-- `npm i`
-
-  Install all dependencies.
-
-- `npm run fmt`
-
-  Format the source code.
-
-- `npm run lint`
-
-  Run all lints.
-
-- `npm run run`
-
-  Test the action by running it.
-
-- `npm run build`
-
-  Build the action and update `dist/`.
 
 ## License
 

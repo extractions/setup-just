@@ -6,17 +6,6 @@ on:
     - cron: 0 12 1 * *
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-    - run: npm ci
-    - run: npm run lint
-    - run: npm run build
-
   test-latest:
     strategy:
       matrix:
@@ -37,7 +26,7 @@ jobs:
     needs: test-latest
     strategy:
       matrix:  # https://github.com/casey/just/releases
-        just-version: [0.5.11, 0.6.1, 0.7.3, 0.8.7, 0.9.9, 0.10.7, 0.11.2, 1.5.0, 1.23.0]
+        just-version: [0.5.11, 0.6.1, 0.7.3, 0.8.7, 0.9.9, 0.10.7, 0.11.2, 1.5.0, 1.23.0, 1.40.0]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
