@@ -12,7 +12,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup just
       uses: ./
       env:
@@ -29,7 +29,7 @@ jobs:
         just-version: [0.5.11, 0.6.1, 0.7.3, 0.8.7, 0.9.9, 0.10.7, 0.11.2, 1.5.0, 1.23.0, 1.40.0]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Run self
       uses: ./
       with:
