@@ -1,6 +1,6 @@
 # 🤖 `setup-just` action
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/extractions/setup-just/build.yaml?branch=trunk)](https://github.com/extractions/setup-just/actions/workflows/build.yaml)
+[![Build Status](https://github.com/extractions/setup-just/actions/workflows/build.yaml/badge.svg)](https://github.com/extractions/setup-just/actions/workflows/build.yaml)
 
 This GitHub Action will install a release of the
 [just](https://github.com/casey/just) command runner for you.
@@ -21,10 +21,10 @@ If you want a specific version of `just` you can specify this by passing the
 ```yaml
 - uses: extractions/setup-just@v3
   with:
-    just-version: '1.40.0'
+    just-version: '1.46.0'
 ```
 
-To avoid rate-limiting, the default Github token available to all actions, is
+To avoid rate-limiting, the default Github token (available to all actions) is
 automatically used to authenticate calls to Github. To override it, pass the
 input `github-token`.
 
