@@ -14,7 +14,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: extractions/setup-crate@579f05a3d77e6a26c3300aa8851537a1b801035a # node24
+    - uses: extractions/setup-crate@0551596312d4008a6dfbc4d3c38fa20eaef46d2d # v2.0.0
       with:
         repo: casey/just
         version: ${{ inputs.just-version }}
