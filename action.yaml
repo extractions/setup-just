@@ -21,6 +21,7 @@ inputs:
 runs:
   using: composite
   steps:
+<<<<<<< HEAD
     - name: Resolve just version from file
       id: resolve
       if: ${{ inputs.just-version-file != '' }}
@@ -54,7 +55,7 @@ runs:
         fi
         echo "Resolved just version '$version' from '$JUST_VERSION_FILE'"
         echo "version=$version" >> "$GITHUB_OUTPUT"
-    - uses: extractions/setup-crate@0551596312d4008a6dfbc4d3c38fa20eaef46d2d # v2.0.0
+    - uses: extractions/setup-crate@7577c1bdf2d95e6d65d532788f35ed79d4b1dda2 # v2.0.1
       with:
         repo: casey/just
         version: ${{ inputs.just-version || steps.resolve.outputs.version }}
