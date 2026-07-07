@@ -21,7 +21,6 @@ inputs:
 runs:
   using: composite
   steps:
-<<<<<<< HEAD
     - name: Resolve just version from file
       id: resolve
       if: ${{ inputs.just-version-file != '' }}
