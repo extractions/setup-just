@@ -39,3 +39,29 @@ jobs:
     - name: Test
       run: |
         [ "$(just --justfile tests/Justfile)" = "Test..." ]
+
+  test-version-file:
+    needs: test-latest
+    strategy:
+      matrix:
+        include:
+          - file: .tool-versions
+            content: just 1.40.0
+            version: 1.40.0
+          - file: .just-version
+            content: 1.39.0
+            version: 1.39.0
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: Create ${{ matrix.file }}
+      run: echo "${{ matrix.content }}" > "${{ matrix.file }}"
+    - name: Run self
+      uses: ./
+      with:
+        just-version-file: ${{ matrix.file }}
+    - name: Check version
+      run: just --version | grep -E "^just v?${{ matrix.version }}$"
+    - name: Test
+      run: |
+        [ "$(just --justfile tests/Justfile)" = "Test..." ]

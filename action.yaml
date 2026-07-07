@@ -7,6 +7,13 @@ branding:
 inputs:
   just-version:
     description: 'A valid semver specifier of the just version to install'
+  just-version-file:
+    description: >-
+      Path to a file that contains the just version to install, such as a
+      .tool-versions file (the `just <version>` entry is read) or a plain
+      file like .just-version (the first non-comment line is read). Ignored
+      when just-version is also set.
+    required: false
   github-token:
     description: 'Github token to use to authenticate downloads'
     required: false
@@ -14,8 +21,41 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Resolve just version from file
+      id: resolve
+      if: ${{ inputs.just-version-file != '' }}
+      shell: bash
+      env:
+        JUST_VERSION: ${{ inputs.just-version }}
+        JUST_VERSION_FILE: ${{ inputs.just-version-file }}
+      run: |
+        set -euo pipefail
+        if [ -n "$JUST_VERSION" ]; then
+          echo "::warning::both just-version and just-version-file were provided; using just-version and ignoring just-version-file"
+          exit 0
+        fi
+        if [ ! -f "$JUST_VERSION_FILE" ]; then
+          echo "::error::just-version-file '$JUST_VERSION_FILE' does not exist"
+          exit 1
+        fi
+        case "$(basename "$JUST_VERSION_FILE")" in
+          .tool-versions)
+            # asdf/mise format, e.g. `just 1.40.0` (extra fields and comments are ignored)
+            version="$(grep -E '^just[[:space:]]+' "$JUST_VERSION_FILE" | head -n1 | awk '{print $2}')"
+            ;;
+          *)
+            # Plain version file: first non-empty, non-comment line
+            version="$(grep -vE '^[[:space:]]*(#|$)' "$JUST_VERSION_FILE" | head -n1 | tr -d '[:space:]')"
+            ;;
+        esac
+        if [ -z "$version" ]; then
+          echo "::error::could not determine a just version from '$JUST_VERSION_FILE'"
+          exit 1
+        fi
+        echo "Resolved just version '$version' from '$JUST_VERSION_FILE'"
+        echo "version=$version" >> "$GITHUB_OUTPUT"
     - uses: extractions/setup-crate@7577c1bdf2d95e6d65d532788f35ed79d4b1dda2 # v2.0.1
       with:
         repo: casey/just
-        version: ${{ inputs.just-version }}
+        version: ${{ inputs.just-version || steps.resolve.outputs.version }}
         github-token: ${{ inputs.github-token }}
